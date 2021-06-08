@@ -77,3 +77,8 @@ spec:
                 configMapKeyRef:
                   name: my-app-configmap
                   key: COLLECTION_ID
+            - name: ENVIRONMENT_ID
+              valueFrom:
+                configMapKeyRef:
+                  name: my-app-configmap
+                  key: ENVIRONMENT_ID
