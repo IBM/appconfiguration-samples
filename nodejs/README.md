@@ -53,7 +53,7 @@ This sample contains an Node.js microservice that you can use to learn more abou
     - MongoDB Community Edition installed on your machine. Official installation links for [Windows](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows/), [Linux](https://docs.mongodb.com/manual/administration/install-on-linux/) & [macOS](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-os-x/). External installation links for [Windows](https://medium.com/@LondonAppBrewery/how-to-download-install-mongodb-on-windows-4ee4b3493514), [Linux](https://www.digitalocean.com/community/tutorials/how-to-install-mongodb-on-ubuntu-18-04) & [macOS](https://zellwk.com/blog/install-mongodb/).
 - Provide the configuration values in file [`app.js`](app.js)
 
-    1. Provide `region`, `guid` & `apikey` at [line 31](app.js#L31) with the values you obtained from the Service credentials section of the instance. And `collectionId` as `blue-charge` & `environmentId`(default value is `dev` ) at [line 39](app.js#L39). Alternatively, you can pass these values as env variables from the command line and start the app.
+    1. Provide `region`, `guid` & `apikey` at [line 31](app.js#L31) with the values you obtained from the Service credentials section of the instance. And `collectionId` as `blue-charge` & `environmentId`(default value is `dev` ) at [line 39](app.js#L39) and start the app with `npm start`. Alternatively, you can pass all these values as env variables from the command line and start the app.
         ```bash
         $ REGION=<region> GUID=<guid> APIKEY=<apikey> COLLECTION_ID=blue-charge ENVIRONMENT_ID=dev npm start
         ```
