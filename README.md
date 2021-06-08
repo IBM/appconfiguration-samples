@@ -14,10 +14,7 @@ These samples are aimed at providing a way to quickly configure App Configuratio
 ## Additional Resources
 
 - [IBM Cloud App Configuration](https://cloud.ibm.com/catalog/services/app-configuration#about)
-- For questions/comments join us on Slack:<br>
-  [Register & Login](https://ibm-cloudplatform.slack.com/) and join us on the
-  [#app-configuration-svc](https://ibm-cloudplatform.slack.com/archives/C01FFHA5YJD)
-  channel
+- [Help & support](https://cloud.ibm.com/docs/app-configuration?topic=app-configuration-ac-getting-help-and-support)
 
 You may also open [issues](https://github.com/IBM/appconfiguration-samples/issues) and
 [PRs](https://github.com/IBM/appconfiguration-samples/pulls) in the repository too.
