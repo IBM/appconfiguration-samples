@@ -11,11 +11,12 @@
  * specific language governing permissions and limitations under the License.
  */
 
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+
+const router = express.Router();
 const { AppConfiguration } = require('ibm-appconfiguration-node-sdk');
+
 let leftNavMenu;
-let discountEnabled;
 let discountValue;
 
 
@@ -29,29 +30,33 @@ function logincheck(req, res, next) {
 }
 
 function featurecheck(req, res, next) {
-    let identityId = req.session.userEmail ? req.session.userEmail : 'defaultUser';
-    let identityAttributes = {
+    const entityId = req.session.userEmail ? req.session.userEmail : 'defaultUser';
+    const entityAttributes = {
         'email': req.session.userEmail
     }
     const client = AppConfiguration.getInstance();
 
     // fetch the feature details of featureId `left-navigation-menu` and get the isEnabled() value
     const leftNavMenuFeature = client.getFeature('left-navigation-menu')
-    leftNavMenu = leftNavMenuFeature.isEnabled();
+    // condition check is to access the feature object methods only when feature object is not null
+    if (leftNavMenuFeature) {
+        leftNavMenu = leftNavMenuFeature.isEnabled();
+    }
 
-    // fetch the feature details of featureId `discount-on-flight-booking` and get the isEnabled() value & getCurrentValue(identityId, identityAttributes) value of the feature
-    const discountFeature = client.getFeature('discount-on-flight-booking')
-    discountEnabled = discountFeature.isEnabled()
-    discountValue = discountFeature.getCurrentValue(identityId, identityAttributes)
+    // fetch the property details of propertyId `flight-booking-discount` and get the getCurrentValue(entityId, entityAttributes) value of the property
+    const discountProperty = client.getProperty('flight-booking-discount')
+    if (discountProperty) {
+        discountValue = discountProperty.getCurrentValue(entityId, entityAttributes)
+    }
 
     next();
 }
 
-let loginAndFeatureCheck = [logincheck, featurecheck]
+const loginAndFeatureCheck = [logincheck, featurecheck]
 
 /* GET flightbooking page. */
-router.get('/', loginAndFeatureCheck, function (req, res, next) {
-    res.render('flights', { isLoggedInUser: req.isLoggedInUser, userEmail: req.session.userEmail, leftNavMenu: leftNavMenu, discountEnabled: discountEnabled, discountValue: discountValue });
+router.get('/', loginAndFeatureCheck, (req, res, next) => {
+    res.render('flights', { isLoggedInUser: req.isLoggedInUser, userEmail: req.session.userEmail, leftNavMenu, discountValue });
 });
 
 

@@ -25,7 +25,6 @@ specific language governing permissions and limitations under the License.
     <script>
         var isLoggedInUser = "<%= isLoggedInUser %>"
         var leftNavMenu = "<%= leftNavMenu %>"
-        var discountEnabled = "<%= discountEnabled %>"
         var discountValue = "<%= discountValue %>"
     </script>
 </head>
@@ -181,18 +180,15 @@ specific language governing permissions and limitations under the License.
         <div class="bx--grid">
             <div class="bx--row">
                 <div class="bx--col-lg-3">
-                    <!-- Discount feature - begin -->
-                    <% if(discountEnabled) { %>
-                        <div class="offer-image">
-                            <img src="../images/discount.png" alt=" " />
-                            <div class="text">
-                                <h1>
-                                    <%= discountValue %>
-                                </h1>
-                            </div>
+                    <div class="offer-image">
+                        <img src="../images/discount.png" alt=" " />
+                        <div class="text">
+                            <h1>
+                                <!-- Discount percentage property -->
+                                <%= discountValue %>
+                            </h1>
                         </div>
-                    <% } %>
-                    <!-- Discount feature - end -->
+                    </div>
                 </div>
                 <div class="bx--col-lg-13">
                     <div class="booking-form">
