@@ -15,6 +15,7 @@ metadata:
    name: my-app-configmap
    namespace: appconfig
 data:
-   REGION: <region>     # Ex: `us-south` for Dallas. `eu-gb` for London.
+   REGION: <region>     # Ex: `us-south` for Dallas. `eu-gb` for London. `au-syd` for Sydney
    GUID: <guid>
    COLLECTION_ID: blue-charge
+   ENVIRONMENT_ID: dev

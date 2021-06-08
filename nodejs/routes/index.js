@@ -11,10 +11,12 @@
  * specific language governing permissions and limitations under the License.
  */
 
-var express = require('express');
-var router = express.Router();
-var User = require('../models/users');
+const express = require('express');
+
+const router = express.Router();
 const { AppConfiguration } = require('ibm-appconfiguration-node-sdk');
+const User = require('../models/users');
+
 let leftNavMenu;
 let flightBookingAllowed;
 
@@ -31,33 +33,37 @@ function logincheck(req, res, next) {
 }
 
 function featurecheck(req, res, next) {
-  let identityId = req.session.userEmail ? req.session.userEmail : 'defaultUser';
-  let identityAttributes = {
+  const entityId = req.session.userEmail ? req.session.userEmail : 'defaultUser';
+  const entityAttributes = {
     'email': req.session.userEmail
   }
   const client = AppConfiguration.getInstance();
 
   // fetch the feature details of featureId `left-navigation-menu` and get the isEnabled() value of the feature
   const leftNavMenuFeature = client.getFeature('left-navigation-menu')
-  leftNavMenu = leftNavMenuFeature.isEnabled();
+  // condition check is to access the feature object methods only when feature object is not null
+  if (leftNavMenuFeature) {
+    leftNavMenu = leftNavMenuFeature.isEnabled();
+  }
 
-
-  // fetch the feature details of featureId `flight-booking` and get the getCurrentValue(identityId, identityAttributes) value of the feature
+  // fetch the feature details of featureId `flight-booking` and get the getCurrentValue(entityId, entityAttributes) value of the feature
   const flightBookingAllowedFeature = client.getFeature('flight-booking')
-  flightBookingAllowed = flightBookingAllowedFeature.getCurrentValue(identityId, identityAttributes)
+  if (flightBookingAllowedFeature) {
+    flightBookingAllowed = flightBookingAllowedFeature.getCurrentValue(entityId, entityAttributes)
+  }
 
   next();
 }
 
-let loginAndFeatureCheck = [logincheck, featurecheck]
+const loginAndFeatureCheck = [logincheck, featurecheck]
 
 /* GET home page. */
-router.get('/', loginAndFeatureCheck, function (req, res, next) {
-  res.render('index', { isLoggedInUser: req.isLoggedInUser, userEmail: req.session.userEmail, leftNavMenu: leftNavMenu, flightBookingAllowed: flightBookingAllowed });
+router.get('/', loginAndFeatureCheck, (req, res, next) => {
+  res.render('index', { isLoggedInUser: req.isLoggedInUser, userEmail: req.session.userEmail, leftNavMenu, flightBookingAllowed });
 });
 
-/* Login & Sign Up Code*/
-router.post('/', function (req, res, next) {
+/* Login & Sign Up Code */
+router.post('/', (req, res, next) => {
   if (req.body.password !== req.body.passwordConf) {
     var err = new Error('Passwords do not match.');
     err.status = 400;
@@ -70,35 +76,35 @@ router.post('/', function (req, res, next) {
     req.body.password &&
     req.body.passwordConf) {
 
-    var userData = {
+    const userData = {
       email: req.body.email,
       password: req.body.password,
     }
 
-    User.create(userData, function (error, user) {
+    User.create(userData, (error, user) => {
       if (error) {
         return next(error);
-      } else {
+      } 
         req.session.userId = user._id;
-        req.session.userEmail = user.email;    //attaching a custom field called "userEmail" to session property of req object
+        req.session.userEmail = user.email;    // attaching a custom field called "userEmail" to session property of req object
 
         return res.redirect('/');
-      }
+      
     });
 
     // on login
   } else if (req.body.logemail && req.body.logpassword) {
-    User.authenticate(req.body.logemail, req.body.logpassword, function (error, user) {
+    User.authenticate(req.body.logemail, req.body.logpassword, (error, user) => {
       if (error || !user) {
-        var err = new Error('Wrong email or password');
+        const err = new Error('Wrong email or password');
         err.status = 401;
         return next(err);
-      } else {
+      } 
         req.session.userId = user._id;
-        req.session.userEmail = user.email;      //attaching a custom field called "userEmail" to session property of req object
+        req.session.userEmail = user.email;      // attaching a custom field called "userEmail" to session property of req object
 
         return res.redirect('/');
-      }
+      
     });
   } else {
     var err = new Error('All fields required.');
@@ -109,14 +115,14 @@ router.post('/', function (req, res, next) {
 
 
 /* GET for logout logout */
-router.get('/logout', function (req, res, next) {
+router.get('/logout', (req, res, next) => {
   if (req.session) {
-    req.session.destroy(function (err) {
+    req.session.destroy((err) => {
       if (err) {
         return next(err);
-      } else {
+      } 
         return res.redirect('/');
-      }
+      
     });
   }
 });
