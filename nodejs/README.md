@@ -54,7 +54,7 @@ This sample contains an Node.js microservice that you can use to learn more abou
 - Provide the configuration values in file [`app.js`](app.js)
 
     1. Provide `region`, `guid` & `apikey` at [line 31](app.js#L31) with the values you obtained from the Service credentials section of the instance.
-    2. Provide `collectionId` as `blue-charge` & `environmentId`(default value is `dev` ) at [line 36](app.js#L36).
+    2. Provide collectionId as `blue-charge` & environmentId(default value is `dev` ) at [line 36](app.js#L36).
     3. For Mongo database connection. Follow the instruction given in the file at [line 56](app.js#L56). Make sure you comment either of url, options before running the app locally or on Kubernetes using minikube or on IKS(IBM Kubernetes Service).
 - Make sure your local mongo db is running or start the mongo server by running `mongod start` from the path where it is installed.
 - Installing Dependencies
