@@ -28,15 +28,20 @@ const app = express();
 
 // App Configuration SDK require & init
 
-const region = process.env.REGION;
-const guid = process.env.GUID;
-const apikey = process.env.APIKEY;
+// TODO: Replace region, guid, apikey with the values obtained from service credentials section of dashboard
+const region = "region";
+const guid = "guid";
+const apikey = "apikey";
+
+// TODO
+const collectionId = "blue-charge";
+const environmentId = "dev";        // default environment id is "dev"
 
 const client = AppConfiguration.getInstance();    // service client for AppConfiguration
 
 // client.setDebug(true);             //Uncomment to enable debug mode
 client.init(region, guid, apikey);
-client.setContext(process.env.COLLECTION_ID, process.env.ENVIRONMENT_ID);
+client.setContext(collectionId, environmentId);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
