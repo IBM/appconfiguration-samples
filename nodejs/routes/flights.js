@@ -19,9 +19,8 @@ const { AppConfiguration } = require('ibm-appconfiguration-node-sdk');
 let leftNavMenu;
 let discountValue;
 
-
 function logincheck(req, res, next) {
-    if (req.session && req.session.userId) {
+    if (req.session && req.session.userEmail) {
         req.isLoggedInUser = true
     } else {
         req.isLoggedInUser = false
