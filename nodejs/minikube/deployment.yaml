@@ -20,7 +20,7 @@ spec:
   progressDeadlineSeconds: 900
   selector:
     matchLabels:
-      app: bluecharge
+      appconfig: appconfig-bluecharge
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -30,33 +30,23 @@ spec:
   template:
     metadata:
       labels:
-        app: bluecharge
+        appconfig: appconfig-bluecharge
     spec:
       affinity:
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
             - labelSelector:
                 matchExpressions:
-                  - key: app
+                  - key: appconfig
                     operator: In
                     values:
-                      - bluecharge
+                      - appconfig-bluecharge
               topologyKey: kubernetes.io/hostname
       containers:
         - name: appconfig-bluecharge
           image: appconfig-bluecharge:latest
           imagePullPolicy: Never
           env:
-            - name: MONGO_USER
-              valueFrom:
-                secretKeyRef:
-                  key: MONGO_ROOT_USERNAME
-                  name: my-app-secrets
-            - name: MONGO_PWD
-              valueFrom:
-                secretKeyRef:
-                  key: MONGO_ROOT_PASSWORD
-                  name: my-app-secrets
             - name: REGION
               valueFrom:
                 configMapKeyRef:
@@ -82,3 +72,47 @@ spec:
                 configMapKeyRef:
                   name: my-app-configmap
                   key: ENVIRONMENT_ID
+      imagePullSecrets:
+        - name: all-icr-io
+
+---
+# TODO
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: my-app-configmap
+  namespace: appconfig
+data:
+  # region value will be `us-south` for Dallas. `eu-gb` for London. `au-syd` for Sydney
+  REGION: <region>
+  GUID: <guid>
+  COLLECTION_ID: blue-charge
+  ENVIRONMENT_ID: dev
+
+---
+# TODO
+apiVersion: v1
+kind: Secret
+metadata:
+  name: my-app-secrets
+  namespace: appconfig
+type: Opaque
+data:
+  # provide the below secret as base64-encoded string
+  APIKEY: <apikey>
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: appconfig-bluecharge
+  namespace: appconfig
+  labels:
+    appconfig: appconfig-bluecharge
+spec:
+  type: NodePort
+  selector:
+    appconfig: appconfig-bluecharge
+  ports:
+    - protocol: TCP
+      port: 3000
