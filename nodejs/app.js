@@ -30,7 +30,7 @@ const apikey = process.env.APIKEY;
 
 const client = AppConfiguration.getInstance();    // service client for AppConfiguration
 
-client.setDebug(true);             //Uncomment to enable debug mode
+// client.setDebug(true);             //Uncomment to enable debug mode
 client.init(region, guid, apikey);
 client.setContext(process.env.COLLECTION_ID, process.env.ENVIRONMENT_ID);
 
