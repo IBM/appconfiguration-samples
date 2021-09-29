@@ -37,13 +37,14 @@ This sample contains an Node.js microservice that you can use to learn more abou
     - You can install it from [here](https://stedolan.github.io/jq/download/)
 - Go to dashboard of your App Configuration instance in IBM Cloud UI.
 - Navigate to Service Credentials section and generate a new set of credentials. Note down the `region`, `guid` and `apikey`. These credentials are required in the next steps.
-- From your terminal, inside the source code execute the `demo.sh` script by running below command
+- From your terminal, execute the [`demo.sh`](../common/script/demo.sh) script by running below command
     ```bash
+    $ cd appconfiguration-samples/common/script
     $ ./demo.sh
     ```
     > If you face any permission errors during the script execution, provide appropriate permission to the file by running - `chmod +x ./demo.sh`. And then execute the script.  
 - Provide all the inputs during script execution. A sample example is shown in below figure
-  <img src="README_IMAGES/README_IMG0.png" width=75% height=50%/>
+  <img src="../common/README_IMAGES/README_IMG0.png" width=75% height=50%/>
 - Script execution takes time. Script is executed successfully only when you see the log `---Demo script complete---` at the end in your terminal.
 - This script will create the collections, feature flags, properties & segments using the default dev environment in the instance which are required for the sample(Bluecharge) web app.
 
@@ -57,20 +58,20 @@ This sample contains an Node.js microservice that you can use to learn more abou
 - Access the running app in a browser at http://localhost:3000
 
 **Note**: Steps are provided to run the app on Kubernetes.
- - [Using minikibe](minikube)
- - [On IKS(IBM Kubernetes Service)](kube)
+ - [Using minikibe](../common/minikube)
+ - [On IKS(IBM Kubernetes Service)](../common/kube)
 
 # Explore the app and its use cases
 Keep the app running. Login with different email ids at a time.
 
 ## Use case 1
-<img src="README_IMAGES/README_IMG1.png"/>
+<img src="../common/README_IMAGES/README_IMG1.png"/>
 
 ## Use case 2
-<img src="README_IMAGES/README_IMG2.png"/>
+<img src="../common/README_IMAGES/README_IMG2.png"/>
 
 ## Use case 3
-<img src="README_IMAGES/README_IMG3.png"/>
+<img src="../common/README_IMAGES/README_IMG3.png"/>
 
 
 # License

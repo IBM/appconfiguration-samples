@@ -1,0 +1,1 @@
+This folder contains the common files(images, css files, scripts, yaml) shared by [nodejs](../nodejs) and [golang](../golang) samples in the repo.

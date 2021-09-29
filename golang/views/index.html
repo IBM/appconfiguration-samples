@@ -1,11 +1,8 @@
 <!-- 
 (C) Copyright IBM Corp. 2021.
-
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
 the License. You may obtain a copy of the License at
-
 http://www.apache.org/licenses/LICENSE-2.0
-
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
 an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License. 
@@ -16,13 +13,17 @@ specific language governing permissions and limitations under the License.
 <head>
     <title>Blue Charge</title>
     <meta charset="UTF-8" />
-    <%- include('./partials/head'); %>
-    <link rel="stylesheet" href="/stylesheets/index.css">
+    {{template "head"}}
+    <link rel="stylesheet" type="text/css" href="/views/stylesheets/index.css" />
 </head>
 
 <body>
-    <%- include('./partials/header'); %>
-    <div class="banner" style="background-image: url(images/banner7.jpg);">
+    {{ if  .LeftNavMenu }}
+    {{ template "header_sidenav" . }}
+    {{ else }}
+    {{ template "header_default" . }}
+    {{ end }}
+    <div class="banner" style="background-image: url(views/images/banner7.jpg);">
         <div class="banner-info">
             <h3>Get Free Coupons and Discounts on Top Brands With Every Recharge</h3>
         </div>
@@ -34,18 +35,18 @@ specific language governing permissions and limitations under the License.
         </div>
 
         <!-- Check feature value and show flight Booking button -->
-        <% if(isLoggedInUser && flightBookingAllowed) { %>
+        {{if .FlightBookingButton }}
         <div class="flight-button">
             <button class="bx--btn bx--btn--primary" type="button"
-                onclick="window.location.href='/flightbooking'">FLIGHT BOOKING</button>
+                onclick="window.location.href='/flights'">FLIGHT BOOKING</button>
         </div>
-        <% } %>
+        {{end}}
     </div>
 
     <div class="bx--row">
         <div class="bx--col-lg-4 bx--col-md-3 bx--col-sm-2">
             <div class="btm-grid back-col1">
-                <img src="../images/bbbb.png" alt="" />
+                <img src="./views/images/bbbb.png" alt=" " >
             </div>
         </div>
         <div class="bx--col-lg-4 bx--col-md-3 bx--col-sm-2">
@@ -65,11 +66,15 @@ specific language governing permissions and limitations under the License.
         </div>
         <div class="bx--col-lg-4 bx--col-md-3 bx--col-sm-2">
             <div class="btm-grid back-col2">
-                <img src="../images/bbb1.png" alt="" />
+                <img src="./views/images/bbb1.png" alt=" " >
             </div>
         </div>
     </div>
-    <%- include('./partials/footer'); %>
+    {{ template "footer"}}
+
+
+
+
 </body>
 
 <!-- LOGIN MODAL -->
@@ -86,17 +91,17 @@ specific language governing permissions and limitations under the License.
             </button>
         </div>
 
-        <form action="/" method="POST">
+        <form action="/login" method="POST">
             <div class="bx--modal-content">
                 <div class="bx--form-item">
                     <label for="text-input-10" class="bx--label">Email Id</label>
-                    <input name="logemail" id="text-input-10" type="text" class="bx--text-input" placeholder="Email Id"
+                    <input name="log_email" id="text-input-10" type="text" class="bx--text-input" placeholder="Email Id"
                         aria-required="true" required>
                 </div>
 
                 <div class="bx--form-item">
                     <label for="text-input-20" class="bx--label bx--label--disabled">Password</label>
-                    <input name="logpassword" id="text-input-20" type="password" class="bx--text-input"
+                    <input name="log_password" id="text-input-20" type="password" class="bx--text-input"
                         placeholder="Password" aria-required="true" required>
                 </div>
             </div>
