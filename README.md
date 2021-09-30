@@ -5,6 +5,7 @@ These samples are aimed at providing a way to quickly configure App Configuratio
 
 ### Apps
 - [Node.js microservice](nodejs)
+- [Golang microservice](golang)
 - [Android app (Java)](android-java)
 - [Android app (Kotlin)](android-kotlin)
 
