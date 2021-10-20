@@ -24,8 +24,8 @@ import android.widget.LinearLayout;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.ibm.appconfiguration.android.lib.AppConfiguration;
-import com.ibm.appconfiguration.android.lib.feature.models.Feature;
+import com.ibm.cloud.appconfiguration.android.sdk.AppConfiguration;
+import com.ibm.cloud.appconfiguration.android.sdk.configurations.models.Feature;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -71,7 +71,10 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         AppConfiguration appConfiguration = AppConfiguration.getInstance();
 
         Feature floatingProfileFeature = (Feature) appConfiguration.getFeature("floating-profile");
-        Boolean isFloatingProfile = (Boolean) floatingProfileFeature.isEnabled();
+        Boolean isFloatingProfile = null;
+        if (floatingProfileFeature != null) {
+            isFloatingProfile = (Boolean) (floatingProfileFeature.isEnabled());
+        }
 
         if (isFloatingProfile) {
             toolbar_profile.setVisibility(View.INVISIBLE);
@@ -82,16 +85,19 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         }
 
 
-        String identityId = email;
-        JSONObject identityAttributes = new JSONObject();
+        String entityId = email;
+        JSONObject entityAttributes = new JSONObject();
         try {
-            identityAttributes.put("email", email);
+            entityAttributes.put("email", email);
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         Feature flightBookingFeature = appConfiguration.getFeature("flight-booking");
-        Boolean isFlightBookingFeatureAllowed = (Boolean) flightBookingFeature.getCurrentValue(identityId, identityAttributes);
+        Boolean isFlightBookingFeatureAllowed = null;
+        if (flightBookingFeature != null) {
+            isFlightBookingFeatureAllowed = (Boolean) flightBookingFeature.getCurrentValue(entityId, entityAttributes);
+        }
 
         if (isFlightBookingFeatureAllowed) {
             flight.setVisibility(View.VISIBLE);

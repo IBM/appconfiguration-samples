@@ -21,8 +21,8 @@ import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.TextView
-import com.ibm.appconfiguration.android.lib.AppConfiguration
-import com.ibm.appconfiguration.android.lib.feature.models.Feature
+import com.ibm.cloud.appconfiguration.android.sdk.AppConfiguration
+import com.ibm.cloud.appconfiguration.android.sdk.configurations.models.Property
 import org.json.JSONException
 import org.json.JSONObject
 
@@ -58,25 +58,17 @@ class FlightActivity : AppCompatActivity() {
 
         val appConfiguration = AppConfiguration.getInstance()
 
-        val identityId = email
-        val identityAttributes = JSONObject()
+        val entityId = email
+        val entityAttributes = JSONObject()
         try {
-            identityAttributes.put("email", email)
+            entityAttributes.put("email", email)
         } catch (e: JSONException) {
             e.printStackTrace()
         }
 
-        val flightBookingDiscountFeature: Feature? = appConfiguration.getFeature("discount-on-flight-booking")
-        val isFlightBookingDiscountEnabled = flightBookingDiscountFeature?.isEnabled()
-        val flightBookingDiscountValue = flightBookingDiscountFeature?.getCurrentValue(identityId!!, identityAttributes)
-
-
-        if (isFlightBookingDiscountEnabled!!) {
-            couponsView?.visibility = View.VISIBLE
-            textViewDiscountValue!!.text = "Get " + flightBookingDiscountValue + "% Offer"
-        } else {
-            couponsView?.visibility = View.INVISIBLE
-        }
+        val discountProperty: Property? = appConfiguration.getProperty("flight-booking-discount")
+        val discountValue = discountProperty?.getCurrentValue(entityId!!, entityAttributes)
+        textViewDiscountValue!!.text = "Get " + discountValue + "% Offer"
 
     }
 
