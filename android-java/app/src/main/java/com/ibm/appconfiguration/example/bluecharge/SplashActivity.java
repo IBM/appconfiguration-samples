@@ -20,8 +20,8 @@ import android.content.Intent;
 import android.view.View;
 import android.widget.ProgressBar;
 
-import com.ibm.appconfiguration.android.lib.AppConfiguration;
-import com.ibm.appconfiguration.android.lib.feature.FeaturesUpdateListener;
+import com.ibm.cloud.appconfiguration.android.sdk.AppConfiguration;
+import com.ibm.cloud.appconfiguration.android.sdk.configurations.ConfigurationUpdateListener;
 
 
 public class SplashActivity extends AppCompatActivity {
@@ -48,11 +48,11 @@ public class SplashActivity extends AppCompatActivity {
 
         // NOTE: provide 'AppConfiguration.REGION_EU_GB' for London, and 'AppConfiguration.REGION_US_SOUTH' for Dallas
         appConfiguration.init(getApplication(), AppConfiguration.REGION_EU_GB, expectedGuid, expectedApiKey);
-        appConfiguration.setCollectionId("blue-charge-android");
+        appConfiguration.setContext("blue-charge-android", "dev");
 
-        appConfiguration.registerFeaturesUpdateListener(new FeaturesUpdateListener() {
+        appConfiguration.registerConfigurationUpdateListener(new ConfigurationUpdateListener() {
             @Override
-            public void onFeaturesUpdate() {
+            public void onConfigurationUpdate() {
                 nDialog.setVisibility(View.INVISIBLE);
                 Intent mainIntent = new Intent(SplashActivity.this, HomeActivity.class);
                 startActivity(mainIntent);

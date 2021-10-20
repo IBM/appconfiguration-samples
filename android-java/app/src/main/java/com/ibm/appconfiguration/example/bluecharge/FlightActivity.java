@@ -23,8 +23,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.ibm.appconfiguration.android.lib.AppConfiguration;
-import com.ibm.appconfiguration.android.lib.feature.models.Feature;
+import com.ibm.cloud.appconfiguration.android.sdk.AppConfiguration;
+import com.ibm.cloud.appconfiguration.android.sdk.configurations.models.Property;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -58,25 +58,21 @@ public class FlightActivity extends AppCompatActivity {
 
         AppConfiguration appConfiguration = AppConfiguration.getInstance();
 
-        String identityId = email;
-        JSONObject identityAttributes = new JSONObject();
+        String entityId = email;
+        JSONObject entityAttributes = new JSONObject();
         try {
-            identityAttributes.put("email", email);
+            entityAttributes.put("email", email);
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        Feature flightBookingDiscountFeature = appConfiguration.getFeature("discount-on-flight-booking");
-        Boolean isFlightBookingDiscountEnabled = flightBookingDiscountFeature.isEnabled();
-        Integer flightBookingDiscountValue = (Integer) flightBookingDiscountFeature.getCurrentValue(identityId, identityAttributes);
-
-
-        if (isFlightBookingDiscountEnabled) {
-            couponsView.setVisibility(View.VISIBLE);
-            textViewDiscountValue.setText("Get " + flightBookingDiscountValue + "% Offer");
-        } else {
-            couponsView.setVisibility(View.INVISIBLE);
+        Property discountProperty = appConfiguration.getProperty("flight-booking-discount");
+        Integer discountValue = null;
+        if (discountProperty != null) {
+            discountValue = (Integer) discountProperty.getCurrentValue(entityId, entityAttributes);
         }
+        textViewDiscountValue.setText("Get " + discountValue + "% Offer");
+
     }
 
 }
