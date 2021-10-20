@@ -18,8 +18,8 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
-import com.ibm.appconfiguration.android.lib.AppConfiguration
-import com.ibm.appconfiguration.android.lib.feature.FeaturesUpdateListener
+import com.ibm.cloud.appconfiguration.android.sdk.AppConfiguration
+import com.ibm.cloud.appconfiguration.android.sdk.configurations.ConfigurationUpdateListener
 
 class SplashActivity : AppCompatActivity() {
     var nDialog: ProgressBar? = null
@@ -44,10 +44,10 @@ class SplashActivity : AppCompatActivity() {
 
         // NOTE: provide 'AppConfiguration.REGION_EU_GB' for London, and 'AppConfiguration.REGION_US_SOUTH' for Dallas
         appConfiguration.init(application, AppConfiguration.REGION_EU_GB, expectedGuid, expectedApiKey)
-        appConfiguration.setCollectionId("blue-charge-android")
+        appConfiguration.setContext("blue-charge-android", "dev")
 
-        appConfiguration.registerFeaturesUpdateListener(object : FeaturesUpdateListener {
-            override fun onFeaturesUpdate() {
+        appConfiguration.registerConfigurationUpdateListener(object : ConfigurationUpdateListener {
+            override fun onConfigurationUpdate() {
                 nDialog?.visibility = View.INVISIBLE
                 val mainIntent = Intent(this@SplashActivity, HomeActivity::class.java)
                 startActivity(mainIntent)

@@ -22,8 +22,8 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.ibm.appconfiguration.android.lib.AppConfiguration
-import com.ibm.appconfiguration.android.lib.feature.models.Feature
+import com.ibm.cloud.appconfiguration.android.sdk.AppConfiguration
+import com.ibm.cloud.appconfiguration.android.sdk.configurations.models.Feature
 import org.json.JSONException
 import org.json.JSONObject
 
@@ -81,16 +81,16 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener {
         }
 
 
-        val identityId = email
-        val identityAttributes = JSONObject()
+        val entityId = email
+        val entityAttributes = JSONObject()
         try {
-            identityAttributes.put("email", email)
+            entityAttributes.put("email", email)
         } catch (e: JSONException) {
             e.printStackTrace()
         }
 
         val flightBookingFeature: Feature? = appConfiguration.getFeature("flight-booking")
-        val isFlightBookingFeatureAllowed = flightBookingFeature?.getCurrentValue(identityId!!, identityAttributes)
+        val isFlightBookingFeatureAllowed = flightBookingFeature?.getCurrentValue(entityId!!, entityAttributes)
 
         if (isFlightBookingFeatureAllowed!! as Boolean) {
             flight?.visibility = View.VISIBLE
