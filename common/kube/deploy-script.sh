@@ -17,7 +17,8 @@ set -e
 region[1]="us-south"
 region[2]="eu-gb"
 region[3]="au-syd"
-printf "\nEnter the region where your App configuration service is created\n1. us-south (Dallas)\n2. eu-gb (London)\n3. au-syd (Sydney)\n\n"
+region[4]="us-east"
+printf "\nEnter the region where your App configuration service is created\n1. us-south (Dallas)\n2. eu-gb (London)\n3. au-syd (Sydney)\n4. us-east (Washington DC)\n\n"
 read -p "Enter region number> " regionIn
 read -p "Enter apikey: (Obtained from Service credentials tab of your instance): " apikey
 printf "\n"

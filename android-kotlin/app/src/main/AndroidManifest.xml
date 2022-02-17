@@ -20,7 +20,8 @@
         <activity android:name=".DTHActivity" />
         <activity android:name=".BusActivity" />
         <activity android:name=".BroadbandActivity" />
-        <activity android:name=".SplashActivity">
+        <activity android:name=".SplashActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
