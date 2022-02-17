@@ -19,6 +19,7 @@ set -e
 region[1]="https://us-south.apprapp.cloud.ibm.com/apprapp/feature/v1/instances"
 region[2]="https://eu-gb.apprapp.cloud.ibm.com/apprapp/feature/v1/instances"
 region[3]="https://au-syd.apprapp.cloud.ibm.com/apprapp/feature/v1/instances"
+region[4]="https://us-east.apprapp.cloud.ibm.com/apprapp/feature/v1/instances"
 urlSeparator="/"
 environmentName=""
 environmentId=""
@@ -27,12 +28,13 @@ collections="collections"
 features="features"
 properties="properties"
 segments="segments"
+tokenURL="https://iam.cloud.ibm.com/identity/token"
 
 generateEnvId(){
 	environmentId="$(tr [A-Z] [a-z] <<< "$1")"
 }
 #---------------------------------Get inputs for the script to run------------------------
-printf "\nEnter the region where your App configuration service is created\n1. us-south (Dallas)\n2. eu-gb (London)\n3. au-syd (Sydney)\n\n"
+printf "\nEnter the region where your App configuration service is created\n1. us-south (Dallas)\n2. eu-gb (London)\n3. au-syd (Sydney)\n4. us-east (Washington DC)\n\n"
 
 read -p "Enter region number> "  regionIn
 printf "\nChoose action\n"
@@ -74,6 +76,8 @@ featureURL="$baseURL$urlSeparator$environments$urlSeparator$environmentId$urlSep
 propertyURL="$baseURL$urlSeparator$environments$urlSeparator$environmentId$urlSeparator$properties"
 segmentIdArray=()
 
+tokenResponse=$(curl -s -X POST $tokenURL -H "Content-Type: application/x-www-form-urlencoded" -d 'grant_type=urn:ibm:params:oauth:grant-type:apikey&apikey='"$apikey"'')
+access_token=($((echo $tokenResponse | jq -r '.access_token') | tr -d \'\"))
 
 
 cleanup()
@@ -81,7 +85,7 @@ cleanup()
 	#---------------------------------segments Cleanup-------------------------
 	printf "%b\n**************************Cleanup is called**************************\n"
 	cleanupSegmentURL="$segmentURL?tags=automation"
-	curl -sb -H "Accept: application/json" -H "Authorization: $apikey" $cleanupSegmentURL > auto.json
+	curl -sb -H "Accept: application/json" -H "Authorization: Bearer $access_token" $cleanupSegmentURL > auto.json
 	if [ -s auto.json ] && grep -q "segments" auto.json
 	then
 		segmentIds=($((<auto.json jq -r '.segments' | jq . | jq -r '.[].segment_id | @sh') | tr -d \'\"))
@@ -90,7 +94,7 @@ cleanup()
 		do
 			printf "%b\n deleting segment with id $i\n"
 			segmentDelURL=$segmentURL$urlSeparator$i
-			segmentDelResponse=$(curl -s --write-out 'HTTPSTATUS:%{http_code}' -H "Accept: application/json" -H "Authorization: $apikey" -X DELETE  $segmentDelURL)
+			segmentDelResponse=$(curl -s --write-out 'HTTPSTATUS:%{http_code}' -H "Accept: application/json" -H "Authorization: Bearer $access_token" -X DELETE  $segmentDelURL)
 			HTTP_STATUS=$(echo $segmentDelResponse | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
 			if [ $HTTP_STATUS != 204 ]
 			then
@@ -103,7 +107,7 @@ cleanup()
 
 	#---------------------------------collections Cleanup-------------------------
 	cleanupCollectionURL="$collectionURL?tags=demo"
-	curl -sb -H "Accept: application/json" -H "Authorization: $apikey" $cleanupCollectionURL > auto.json
+	curl -sb -H "Accept: application/json" -H "Authorization: Bearer $access_token" $cleanupCollectionURL > auto.json
 	if [ -s auto.json ] && grep -q "collection" auto.json
 	then
 		collectionIds=($((<auto.json jq -r '.collections' | jq . | jq -r '.[].collection_id | @sh') | tr -d \'\"))
@@ -112,7 +116,7 @@ cleanup()
 		do
 			printf "%b\n deleting collection with id $i\n"
 			collectionDelURL=$collectionURL$urlSeparator$i
-			collectionDelResponse=$(curl -s --write-out 'HTTPSTATUS:%{http_code}' -H "Accept: application/json" -H "Authorization: $apikey" -X DELETE  $collectionDelURL)
+			collectionDelResponse=$(curl -s --write-out 'HTTPSTATUS:%{http_code}' -H "Accept: application/json" -H "Authorization: Bearer $access_token" -X DELETE  $collectionDelURL)
 			HTTP_STATUS=$(echo $collectionDelResponse | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
 			if [ $HTTP_STATUS != 204 ]
 			then
@@ -125,7 +129,7 @@ cleanup()
 
 	#---------------------------------environments Cleanup-------------------------
 	cleanupEnvironmentURL="$environmentURL"
-	curl -sb -H "Accept: application/json" -H "Authorization: $apikey" $cleanupEnvironmentURL > auto.json
+	curl -sb -H "Accept: application/json" -H "Authorization: Bearer $access_token" $cleanupEnvironmentURL > auto.json
 	if [ -s auto.json ] && grep -q "environment" auto.json
 	then
 		environmentIds=($((<auto.json jq -r '.environments' | jq . | jq -r '.[].environment_id | @sh') | tr -d \'\"))
@@ -134,7 +138,7 @@ cleanup()
 		do
 			printf "%b\n deleting environment with id ${environmentIds[i]}\n"
 			environmentDelURL=$environmentURL$urlSeparator${environmentIds[i]}
-			environmentDelResponse=$(curl -s --write-out 'HTTPSTATUS:%{http_code}' -H "Accept: application/json" -H "Authorization: $apikey" -X DELETE  $environmentDelURL)
+			environmentDelResponse=$(curl -s --write-out 'HTTPSTATUS:%{http_code}' -H "Accept: application/json" -H "Authorization: Bearer $access_token" -X DELETE  $environmentDelURL)
 			HTTP_STATUS=$(echo $environmentDelResponse | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
 			if [ $HTTP_STATUS != 204 ]
 			then
@@ -148,7 +152,7 @@ cleanup()
 
 	#---------------------------------feature Cleanup-------------------------
 	cleanupFeatureURL="$baseURL$urlSeparator$environments$urlSeparator$environmentId$urlSeparator$features"
-	curl -sb -H "Accept: application/json" -H "Authorization: $apikey" $cleanupFeatureURL > auto.json
+	curl -sb -H "Accept: application/json" -H "Authorization: Bearer $access_token" $cleanupFeatureURL > auto.json
 	if [ -s auto.json ] && grep -q "features" auto.json
 	then
 		featureIds=($((<auto.json jq -r '.features' | jq . | jq -r '.[].feature_id | @sh') | tr -d \'\"))
@@ -157,7 +161,7 @@ cleanup()
 		do
 			printf "%b\n deleting feature with id $i\n"
 			featureDelURL=$cleanupFeatureURL$urlSeparator$i
-			featureDelResponse=$(curl -s --write-out 'HTTPSTATUS:%{http_code}' -H "Accept: application/json" -H "Authorization: $apikey" -X DELETE  $featureDelURL)
+			featureDelResponse=$(curl -s --write-out 'HTTPSTATUS:%{http_code}' -H "Accept: application/json" -H "Authorization: Bearer $access_token" -X DELETE  $featureDelURL)
 			HTTP_STATUS=$(echo $featureDelResponse | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
 			if [ $HTTP_STATUS != 204 ]
 			then
@@ -170,7 +174,7 @@ cleanup()
 
 	#---------------------------------property Cleanup-------------------------
 	cleanupPropertyURL="$baseURL$urlSeparator$environments$urlSeparator$environmentId$urlSeparator$properties"
-	curl -sb -H "Accept: application/json" -H "Authorization: $apikey" $cleanupPropertyURL > auto.json
+	curl -sb -H "Accept: application/json" -H "Authorization: Bearer $access_token" $cleanupPropertyURL > auto.json
 	if [ -s auto.json ] && grep -q "properties" auto.json
 	then
 		propertyIds=($((<auto.json jq -r '.properties' | jq . | jq -r '.[].property_id | @sh') | tr -d \'\"))
@@ -179,7 +183,7 @@ cleanup()
 		do
 			printf "%b\n deleting property with id $i\n"
 			propertyDelURL=$cleanupPropertyURL$urlSeparator$i
-			propertyDelResponse=$(curl -s --write-out 'HTTPSTATUS:%{http_code}' -H "Accept: application/json" -H "Authorization: $apikey" -X DELETE  $propertyDelURL)
+			propertyDelResponse=$(curl -s --write-out 'HTTPSTATUS:%{http_code}' -H "Accept: application/json" -H "Authorization: Bearer $access_token" -X DELETE  $propertyDelURL)
 			HTTP_STATUS=$(echo $propertyDelResponse | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
 			if [ $HTTP_STATUS != 204 ]
 			then
@@ -198,7 +202,7 @@ addSegments()
 	segmentUpdateURL=$segmentURL
 	days=$(($(date +'%s * 1000 + %-N / 1000000')))
 	segmentId="segment_${days}"
-	segmentStatus=$(curl -s --write-out 'HTTPSTATUS:%{http_code}'  -X POST $segmentUpdateURL -H "Authorization: $apikey" -H "Content-Type: application/json" --data '{"segment_id": "'"${segmentId}"'", "name": "IBM employees","description": "All employees of IBM","tags": "automation, demo,alliance","rules" :  [{"attribute_name" : "email","operator": "endsWith","values": [ "ibm.com"]}]}' )
+	segmentStatus=$(curl -s --write-out 'HTTPSTATUS:%{http_code}'  -X POST $segmentUpdateURL -H "Authorization: Bearer $access_token" -H "Content-Type: application/json" --data '{"segment_id": "'"${segmentId}"'", "name": "IBM employees","description": "All employees of IBM","tags": "automation, demo,alliance","rules" :  [{"attribute_name" : "email","operator": "endsWith","values": [ "ibm.com"]}]}' )
 	HTTP_BODY=$(echo $segmentStatus | sed -e 's/HTTPSTATUS\:.*//g' | jq .)
 	HTTP_STATUS=$(echo $segmentStatus | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
  	printf "%b\nHTTP_STATUS is $HTTP_STATUS"
@@ -215,7 +219,7 @@ addSegments()
 
 	days=$(($(date +'%s * 1000 + %-N / 1000000')))
 	segmentId="segment_${days}"
-	segmentStatus=$(curl -s --write-out 'HTTPSTATUS:%{http_code}'  -X POST $segmentUpdateURL -H "Authorization: $apikey" -H "Content-Type: application/json" --data '{"segment_id": "'"${segmentId}"'", "name": "Software testers","description": "Group of individuals involved in testing the functionality of a product.","tags": "automation, demo,test" ,"rules" : [{"attribute_name" : "email","operator": "is","values": [ "alice@bluecharge.com","bob@bluecharge.com"]}]}' )
+	segmentStatus=$(curl -s --write-out 'HTTPSTATUS:%{http_code}'  -X POST $segmentUpdateURL -H "Authorization: Bearer $access_token" -H "Content-Type: application/json" --data '{"segment_id": "'"${segmentId}"'", "name": "Software testers","description": "Group of individuals involved in testing the functionality of a product.","tags": "automation, demo,test" ,"rules" : [{"attribute_name" : "email","operator": "is","values": [ "alice@bluecharge.com","bob@bluecharge.com"]}]}' )
 	HTTP_BODY=$(echo $segmentStatus | sed -e 's/HTTPSTATUS\:.*//g' | jq .)
 	HTTP_STATUS=$(echo $segmentStatus | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
 	if [ $HTTP_STATUS != 201 ]
@@ -232,7 +236,7 @@ addSegments()
 
 addCollection() 
 {
-	collectionStatus=$(curl -s --write-out 'HTTPSTATUS:%{http_code}'  -X POST $collectionURL -H "Authorization: $apikey" -H "Content-Type: application/json" --data '{"name" : "Blue charge","collection_id": "blue-charge","description": "Demo App","deleted" : "false","created_mode": "Dashboard","tags": "demo"}' )
+	collectionStatus=$(curl -s --write-out 'HTTPSTATUS:%{http_code}'  -X POST $collectionURL -H "Authorization: Bearer $access_token" -H "Content-Type: application/json" --data '{"name" : "Blue charge","collection_id": "blue-charge","description": "Demo App","deleted" : "false","created_mode": "Dashboard","tags": "demo"}' )
 	HTTP_BODY=$(echo $collectionStatus | sed -e 's/HTTPSTATUS\:.*//g' | jq .)
 	HTTP_STATUS=$(echo $collectionStatus | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
 	printf "%b\nHTTP_STATUS is $HTTP_STATUS"
@@ -248,7 +252,7 @@ addCollection()
 
 addEnvironment() 
 {
-	environmentStatus=$(curl -s --write-out 'HTTPSTATUS:%{http_code}'  -X POST $environmentURL -H "Authorization: $apikey" -H "Content-Type: application/json" --data '{"name" : "'"${environmentName}"'","environment_id": "'"${environmentId}"'","description": "application environment","tags": "demo","color_code":"#FF5733"}' )
+	environmentStatus=$(curl -s --write-out 'HTTPSTATUS:%{http_code}'  -X POST $environmentURL -H "Authorization: Bearer $access_token" -H "Content-Type: application/json" --data '{"name" : "'"${environmentName}"'","environment_id": "'"${environmentId}"'","description": "application environment","tags": "demo","color_code":"#FF5733"}' )
 	HTTP_BODY=$(echo $environmentStatus | sed -e 's/HTTPSTATUS\:.*//g' | jq .)
 	HTTP_STATUS=$(echo $environmentStatus | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
 	printf "%b\nHTTP_STATUS is $HTTP_STATUS"
@@ -265,7 +269,7 @@ addEnvironment()
 addFeature()
 {
 	featureUpdateURL=$featureURL
-	featureStatus=$(curl -s --write-out 'HTTPSTATUS:%{http_code}'  -X POST $featureUpdateURL -H "Authorization: $apikey" -H "Content-Type: application/json" --data '{"name": "Left Navigation","feature_id": "left-navigation-menu","description": "Change from top nav to  new left nav ","enabled_value": true,"type": "BOOLEAN","disabled_value": false,"tags": "demo","collections": [{"collection_id": "blue-charge"}],"segment_rules":[],"enabled": true}' )
+	featureStatus=$(curl -s --write-out 'HTTPSTATUS:%{http_code}'  -X POST $featureUpdateURL -H "Authorization: Bearer $access_token" -H "Content-Type: application/json" --data '{"name": "Left Navigation","feature_id": "left-navigation-menu","description": "Change from top nav to  new left nav ","enabled_value": true,"type": "BOOLEAN","disabled_value": false,"tags": "demo","collections": [{"collection_id": "blue-charge"}],"segment_rules":[],"enabled": false}' )
 	HTTP_BODY=$(echo $featureStatus | sed -e 's/HTTPSTATUS\:.*//g' | jq .)
 	HTTP_STATUS=$(echo $featureStatus | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
 	printf "%b\nHTTP_STATUS is $HTTP_STATUS\n"
@@ -278,7 +282,7 @@ addFeature()
 		printf "%bSuccess:  Feature updated with id $featureId\n"
 	fi
 
-	featureStatus=$(curl -s --write-out 'HTTPSTATUS:%{http_code}'  -X POST $featureUpdateURL -H "Authorization: $apikey" -H "Content-Type: application/json" --data '{"name": "Flight Booking","feature_id": "flight-booking","description": "New major functionality for introducing Flight bookings","enabled_value": false,"type": "BOOLEAN","disabled_value": false,"tags": "demo","segment_rules": [{"rules": [{"segments": ["'"${testersSegmentId}"'"]}],"value": true,"order": "1"}],"collections": [{"collection_id": "blue-charge"}],"enabled": true}' )
+	featureStatus=$(curl -s --write-out 'HTTPSTATUS:%{http_code}'  -X POST $featureUpdateURL -H "Authorization: Bearer $access_token" -H "Content-Type: application/json" --data '{"name": "Flight Booking","feature_id": "flight-booking","description": "New major functionality for introducing Flight bookings","enabled_value": false,"type": "BOOLEAN","disabled_value": false,"tags": "demo","segment_rules": [{"rules": [{"segments": ["'"${testersSegmentId}"'"]}],"value": true,"order": "1"}],"collections": [{"collection_id": "blue-charge"}],"enabled": false}' )
 	HTTP_BODY=$(echo $featureStatus | sed -e 's/HTTPSTATUS\:.*//g' | jq .)
 	HTTP_STATUS=$(echo $featureStatus | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
 	if [ $HTTP_STATUS != 201 ]
@@ -295,7 +299,7 @@ addFeature()
 addProperty()
 {
 	propertyUpdateURL=$propertyURL
-	propertyStatus=$(curl -s --write-out 'HTTPSTATUS:%{http_code}'  -X POST $propertyUpdateURL -H "Authorization: $apikey" -H "Content-Type: application/json" --data '{"name": "Flight Booking Discount","property_id": "flight-booking-discount","description": "Discount % value provided for flight bookings that are customized per alliance customer","value": 5,"type": "NUMERIC","tags": "demo,campaign,discount","segment_rules": [{"rules": [{"segments": ["'"${ibmerSegmentId}"'"]}],"value": 25,"order": "1"}],"collections": [{"collection_id": "blue-charge"}]}' )
+	propertyStatus=$(curl -s --write-out 'HTTPSTATUS:%{http_code}'  -X POST $propertyUpdateURL -H "Authorization: Bearer $access_token" -H "Content-Type: application/json" --data '{"name": "Flight Booking Discount","property_id": "flight-booking-discount","description": "Discount % value provided for flight bookings that are customized per alliance customer","value": 5,"type": "NUMERIC","tags": "demo,campaign,discount","segment_rules": [{"rules": [{"segments": ["'"${ibmerSegmentId}"'"]}],"value": 25,"order": "1"}],"collections": [{"collection_id": "blue-charge"}]}' )
 	HTTP_BODY=$(echo $propertyStatus | sed -e 's/HTTPSTATUS\:.*//g' | jq .)
 	HTTP_STATUS=$(echo $propertyStatus | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
 	if [ $HTTP_STATUS != 201 ]

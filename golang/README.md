@@ -30,7 +30,7 @@ This sample contains a Golang microservice that you can use to learn more about 
 - In the [IBM Cloud catalog](https://cloud.ibm.com/catalog#services), search **App Configuration** and
   click [App Configuration](https://cloud.ibm.com/catalog/services/app-configuration). The service provisioning page
   opens.
-- **Select a region** - Currently, Dallas (us-south), London (eu-gb) and Sydney (au-syd) regions are supported.
+- **Select a region** - Currently, Dallas (us-south), London (eu-gb), Sydney (au-syd) and Washington DC (us-east) regions are supported.
 - Select a pricing plan, resource group and configure your resource with a service name, or use the preset name.
 - Click **Create**. A new service instance is created and the App Configuration dashboard is displayed.
 
