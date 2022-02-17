@@ -46,7 +46,6 @@ public class SplashActivity extends AppCompatActivity {
         AppConfiguration appConfiguration = AppConfiguration.getInstance();
         appConfiguration.enableDebug(true);
 
-        // NOTE: provide 'AppConfiguration.REGION_EU_GB' for London, and 'AppConfiguration.REGION_US_SOUTH' for Dallas
         appConfiguration.init(getApplication(), AppConfiguration.REGION_EU_GB, expectedGuid, expectedApiKey);
         appConfiguration.setContext("blue-charge-android", "dev");
 
