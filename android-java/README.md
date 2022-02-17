@@ -21,7 +21,7 @@ This sample contains an Android project that you can use to learn more about the
 ## Create an instance of App Configuration service
 - Log in to your IBM Cloud account.
 - In the [IBM Cloud catalog](https://cloud.ibm.com/catalog#services), search **App Configuration** and click [App Configuration](https://cloud.ibm.com/catalog/services/app-configuration). The service provisioning page opens.
-- **Select a region** - Currently, Dallas (us-south), London (eu-gb) and Sydney (au-syd) regions are supported.
+- **Select a region** - Currently, Dallas (us-south), London (eu-gb), Sydney (au-syd) and Washington DC (us-east) regions are supported.
 - Select a pricing plan, resource group and configure your resource with a service name, or use the preset name.
 - Click **Create**. A new service instance is created and the App Configuration dashboard is displayed.
 
@@ -40,7 +40,7 @@ This sample contains an Android project that you can use to learn more about the
     $ cd appconfiguration-samples/common/script
     $ ./demo-android.sh
     ```
-    > If any permission error occurred during script the execution, provide appropriate permission by running - `sudo chmod 777 ./demo-android.sh`. And then execute the script.  
+    > If any permission error occurred during script the execution, provide appropriate permission by running - `sudo chmod +x ./demo-android.sh`. And then execute the script.  
 - Provide all the inputs during script execution. A sample example is shown in below figure
   <img src="../common/README_IMAGES/README_IMG0.png" width=75% height=50%/>
 - Script execution takes time. Script is executed successfully only when you see the log `---Demo script complete---` at the end in your terminal.
@@ -56,17 +56,18 @@ Use either of the following options
         - Add below dependencies to module level `build.gradle` file
         ```java 
             dependencies {
-               implementation "com.ibm.cloud:appconfiguration-android-sdk:0.2.0"
+               implementation "com.ibm.cloud:appconfiguration-android-sdk:0.2.2"
             }
          ```
 
 - Edit the android app
     - In file `SplashActivity.java` at [line 43 & 44](app/src/main/java/com/ibm/appconfiguration/example/bluecharge/SplashActivity.java#L43) provide the `apikey` and `guid` with the values you obtained from the Service credentials section of the instance.
-    - And at [line 50](app/src/main/java/com/ibm/appconfiguration/example/bluecharge/SplashActivity.java#L50) provide the `region` parameter as
+    - And at [line 49](app/src/main/java/com/ibm/appconfiguration/example/bluecharge/SplashActivity.java#L49) provide the `region` parameter as
         - `AppConfiguration.REGION_EU_GB` for London
         - `AppConfiguration.REGION_US_SOUTH` for Dallas
         - `AppConfiguration.REGION_AU_SYD` for Sydney
-    - Provide `collectionId` as `blue-charge-android` & `environmentId`(default value is `dev`) at [line 51](app/src/main/java/com/ibm/appconfiguration/example/bluecharge/SplashActivity.java#L51).
+        - `AppConfiguration.REGION_US_EAST` for Washington DC
+    - Provide `collectionId` as `blue-charge-android` & `environmentId`(default value is `dev`) at [line 50](app/src/main/java/com/ibm/appconfiguration/example/bluecharge/SplashActivity.java#L50).
 
 - Run the app
 
