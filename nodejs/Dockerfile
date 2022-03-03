@@ -9,7 +9,11 @@
 # an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
 # specific language governing permissions and limitations under the License.
 
-FROM node:14.19.0
+FROM registry.access.redhat.com/ubi8-minimal:latest
+
+RUN microdnf install yum -y && yum upgrade -y
+RUN curl -fsSL https://rpm.nodesource.com/setup_16.x | bash - \
+    && yum install nodejs -y
 
 RUN npm -v
 
