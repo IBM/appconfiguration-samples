@@ -62,7 +62,7 @@ This sample contains a Golang microservice that you can use to learn more about 
 ## Run the sample
 
 - Prerequisites
-    - Golang installed on your machine. Go version(1.17, 1.16.7) or later is recommended
+    - Golang installed on your machine. Go version 1.16 or newer
 - Provide all the configuration values in [`.env`](.env) file
 - Run `go build` from the root folder to generate an executable binary for our sample Go application
 - Run `./golang` to start the app
