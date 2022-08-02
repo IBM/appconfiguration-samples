@@ -11,11 +11,10 @@
  * specific language governing permissions and limitations under the License.
  */
 
+const { appConfigClient } = require('../init');
 const express = require('express');
 
 const router = express.Router();
-const { AppConfiguration } = require('ibm-appconfiguration-node-sdk');
-
 let leftNavMenu;
 let flightBookingAllowed;
 
@@ -33,17 +32,16 @@ function featurecheck(req, res, next) {
   const entityAttributes = {
     'email': req.session.userEmail
   }
-  const client = AppConfiguration.getInstance();
 
-  // fetch the feature details of featureId `left-navigation-menu` and get the isEnabled() value of the feature
-  const leftNavMenuFeature = client.getFeature('left-navigation-menu')
+  // fetch the feature details of featureId `left-navigation-menu` and get the getCurrentValue(entityId) value of the feature
+  const leftNavMenuFeature = appConfigClient.getFeature('left-navigation-menu')
   // condition check is to access the feature object methods only when feature object is not null
   if (leftNavMenuFeature) {
-    leftNavMenu = leftNavMenuFeature.isEnabled();
+    leftNavMenu = leftNavMenuFeature.getCurrentValue(entityId);
   }
 
   // fetch the feature details of featureId `flight-booking` and get the getCurrentValue(entityId, entityAttributes) value of the feature
-  const flightBookingAllowedFeature = client.getFeature('flight-booking')
+  const flightBookingAllowedFeature = appConfigClient.getFeature('flight-booking')
   if (flightBookingAllowedFeature) {
     flightBookingAllowed = flightBookingAllowedFeature.getCurrentValue(entityId, entityAttributes)
   }

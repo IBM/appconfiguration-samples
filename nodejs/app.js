@@ -10,29 +10,17 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-require('dotenv').config()
+require('dotenv').config();
+require('./init').initialiseAppConfiguration();
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
-
-const { AppConfiguration } = require('ibm-appconfiguration-node-sdk');
 const indexRouter = require('./routes/index');
 const flightBookingRouter = require('./routes/flights');
 
 const app = express();
-
-// App Configuration SDK init
-const region = process.env.REGION;
-const guid = process.env.GUID;
-const apikey = process.env.APIKEY;
-
-const client = AppConfiguration.getInstance();    // service client for AppConfiguration
-
-// client.setDebug(true);             //Uncomment to enable debug mode
-client.init(region, guid, apikey);
-client.setContext(process.env.COLLECTION_ID, process.env.ENVIRONMENT_ID);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

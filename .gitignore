@@ -4,5 +4,4 @@ node_modules
 */node_modules
 /.idea
 */*golang
-**/auto.json
 __pycache__/
