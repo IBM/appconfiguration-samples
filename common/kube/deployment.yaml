@@ -45,6 +45,13 @@ spec:
       containers:
         - name: appconfig-bluecharge
           image: us.icr.io/<namespace>/appconfig-bluecharge:<tag>
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "500m"
+            limits:
+              memory: "256Mi"
+              cpu: "1000m"
           ports:
             - containerPort: 3000
           env:

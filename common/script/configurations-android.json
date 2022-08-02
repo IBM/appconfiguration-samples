@@ -1,0 +1,146 @@
+{
+    "environments": [
+        {
+            "name": "Dev",
+            "environment_id": "dev",
+            "description": "Environment created on instance creation",
+            "tags": "",
+            "color_code": "#FDD13A",
+            "features": [
+                {
+                    "name": "Flight Booking",
+                    "feature_id": "flight-booking",
+                    "description": "New major functionality for introducing Flight bookings",
+                    "tags": "demo",
+                    "type": "BOOLEAN",
+                    "enabled_value": true,
+                    "disabled_value": false,
+                    "segment_rules": [
+                        {
+                            "rules": [
+                                {
+                                    "segments": [
+                                        "business-users"
+                                    ]
+                                }
+                            ],
+                            "value": true,
+                            "order": 1,
+                            "rollout_percentage": 0
+                        },
+                        {
+                            "rules": [
+                                {
+                                    "segments": [
+                                        "internal-testers"
+                                    ]
+                                }
+                            ],
+                            "value": true,
+                            "order": 2,
+                            "rollout_percentage": 100
+                        }
+                    ],
+                    "collections": [
+                        {
+                            "collection_id": "blue-charge-android",
+                            "name": "Blue charge android"
+                        }
+                    ],
+                    "enabled": false,
+                    "rollout_percentage": 0,
+                    "isOverridden": true
+                },
+                {
+                    "name": "Floating Profile",
+                    "feature_id": "floating-profile",
+                    "description": "Change from toolbar profile icon to new floating profile icon on home page.",
+                    "tags": "demo",
+                    "type": "BOOLEAN",
+                    "enabled_value": true,
+                    "disabled_value": false,
+                    "segment_rules": [],
+                    "collections": [
+                        {
+                            "collection_id": "blue-charge-android",
+                            "name": "Blue charge android"
+                        }
+                    ],
+                    "enabled": false,
+                    "rollout_percentage": 50,
+                    "isOverridden": true
+                }
+            ],
+            "properties": [
+                {
+                    "name": "Flight Booking Discount",
+                    "property_id": "flight-booking-discount",
+                    "description": "Discount % value provided for flight bookings that are customized per alliance customer",
+                    "tags": "demo,campaign,discount",
+                    "type": "NUMERIC",
+                    "value": 5,
+                    "segment_rules": [
+                        {
+                            "rules": [
+                                {
+                                    "segments": [
+                                        "business-users"
+                                    ]
+                                }
+                            ],
+                            "value": 25,
+                            "order": 1
+                        }
+                    ],
+                    "collections": [
+                        {
+                            "collection_id": "blue-charge-android",
+                            "name": "Blue charge android"
+                        }
+                    ],
+                    "isOverridden": true
+                }
+            ]
+        }
+    ],
+    "collections": [
+        {
+            "name": "Blue charge android",
+            "collection_id": "blue-charge-android",
+            "description": "Demo App",
+            "tags": "demo"
+        }
+    ],
+    "segments": [
+        {
+            "name": "Internal Testers",
+            "segment_id": "internal-testers",
+            "description": "Group of individuals involved in testing the functionality of a product.",
+            "tags": "automation,demo,test",
+            "rules": [
+                {
+                    "values": [
+                        "@bluecharge.com"
+                    ],
+                    "operator": "endsWith",
+                    "attribute_name": "email"
+                }
+            ]
+        },
+        {
+            "name": "Business Users",
+            "segment_id": "business-users",
+            "description": "All employees of IBM",
+            "tags": "automation,demo,alliance",
+            "rules": [
+                {
+                    "values": [
+                        "@ibm.com"
+                    ],
+                    "operator": "endsWith",
+                    "attribute_name": "email"
+                }
+            ]
+        }
+    ]
+}

@@ -46,6 +46,13 @@ spec:
         - name: appconfig-bluecharge
           image: appconfig-bluecharge:latest
           imagePullPolicy: Never
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "500m"
+            limits:
+              memory: "256Mi"
+              cpu: "1000m"
           env:
             - name: REGION
               valueFrom:
