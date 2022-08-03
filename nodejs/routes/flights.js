@@ -11,11 +11,10 @@
  * specific language governing permissions and limitations under the License.
  */
 
+const { appConfigClient } = require('../init');
 const express = require('express');
 
 const router = express.Router();
-const { AppConfiguration } = require('ibm-appconfiguration-node-sdk');
-
 let leftNavMenu;
 let discountValue;
 
@@ -33,17 +32,16 @@ function featurecheck(req, res, next) {
     const entityAttributes = {
         'email': req.session.userEmail
     }
-    const client = AppConfiguration.getInstance();
 
-    // fetch the feature details of featureId `left-navigation-menu` and get the isEnabled() value
-    const leftNavMenuFeature = client.getFeature('left-navigation-menu')
+    // fetch the feature details of featureId `left-navigation-menu` and get the getCurrentValue(entityId) value of the feature
+    const leftNavMenuFeature = appConfigClient.getFeature('left-navigation-menu')
     // condition check is to access the feature object methods only when feature object is not null
     if (leftNavMenuFeature) {
-        leftNavMenu = leftNavMenuFeature.isEnabled();
+        leftNavMenu = leftNavMenuFeature.getCurrentValue(entityId);
     }
 
     // fetch the property details of propertyId `flight-booking-discount` and get the getCurrentValue(entityId, entityAttributes) value of the property
-    const discountProperty = client.getProperty('flight-booking-discount')
+    const discountProperty = appConfigClient.getProperty('flight-booking-discount')
     if (discountProperty) {
         discountValue = discountProperty.getCurrentValue(entityId, entityAttributes)
     }
@@ -57,6 +55,5 @@ const loginAndFeatureCheck = [logincheck, featurecheck]
 router.get('/', loginAndFeatureCheck, (req, res, next) => {
     res.render('flights', { isLoggedInUser: req.isLoggedInUser, userEmail: req.session.userEmail, leftNavMenu, discountValue });
 });
-
 
 module.exports = router;
