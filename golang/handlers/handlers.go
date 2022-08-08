@@ -17,7 +17,7 @@
 package handlers
 
 import (
-	"golang/sdk-integration"
+	sdk_integration "golang/sdk-integration"
 	"log"
 	"net/http"
 )
@@ -39,9 +39,9 @@ func HomePage(w http.ResponseWriter, r *http.Request) {
 		log.Println("error:The Page could not be created")
 		return
 	}
-	feature.LeftNavMenu = sdk_integration.CheckLeftNavMenuFlag()
-
+	feature.LeftNavMenu = sdk_integration.CheckLeftNavMenuFlag(feature.UserEmail)
 	flightButton := sdk_integration.FlightButton(feature.UserEmail)
+
 	if feature.IsValidUser && flightButton {
 		feature.FlightBookingButton = true
 	} else {
@@ -63,7 +63,7 @@ func FlightBooking(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	feature.LeftNavMenu = sdk_integration.CheckLeftNavMenuFlag()
+	feature.LeftNavMenu = sdk_integration.CheckLeftNavMenuFlag(feature.UserEmail)
 	feature.DiscountValue = sdk_integration.GetDiscountValue(feature.UserEmail)
 
 	templates, err := loadTemplate("flights")

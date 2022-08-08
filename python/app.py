@@ -34,8 +34,8 @@ def logincheck(mail_id, password):
 def home():
     if EMAIL in session:
         email = session[EMAIL]
-        return render_template(INDEX_HTML, left_nav_menu=check_left_nav_menu_flag(), flight_booking_button=flight_button(email), is_valid_user=cv.is_validuser, user_mail=email)
-    return render_template(INDEX_HTML, left_nav_menu=check_left_nav_menu_flag())
+        return render_template(INDEX_HTML, left_nav_menu=check_left_nav_menu_flag(email), flight_booking_button=flight_button(email), is_valid_user=cv.is_validuser, user_mail=email)
+    return render_template(INDEX_HTML, left_nav_menu=check_left_nav_menu_flag('defaultUser'))
 
 
 @app.route("/login", methods=['POST', 'GET'])
@@ -51,7 +51,7 @@ def login():
             return redirect(url_for(HOME))
     # else:
         # if cv.is_validuser:
-    return render_template(INDEX_HTML, left_nav_menu=check_left_nav_menu_flag())
+    return render_template(INDEX_HTML, left_nav_menu=check_left_nav_menu_flag('defaultUser'))
     # else:
     # return render_template(INDEX_HTML, left_nav_menu=check_left_nav_menu_flag())
 
@@ -67,7 +67,7 @@ def logout():
 def flights():
     if EMAIL in session:
         email = session[EMAIL]
-    return render_template(FLIGHTS_HTML, left_nav_menu=check_left_nav_menu_flag(), is_valid_user=cv.is_validuser, user_mail=email, discount_value=get_discount_value(email))
+    return render_template(FLIGHTS_HTML, left_nav_menu=check_left_nav_menu_flag(email), is_valid_user=cv.is_validuser, user_mail=email, discount_value=get_discount_value(email))
 
 
 if __name__ == "__main__":

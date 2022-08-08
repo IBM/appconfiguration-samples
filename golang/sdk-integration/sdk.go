@@ -32,14 +32,25 @@ func init() {
 }
 
 // CheckLeftNavMenuFlag function checks for Left Navigation feature flag status
-func CheckLeftNavMenuFlag() bool {
+func CheckLeftNavMenuFlag(email string) bool {
+	var entityID string
+	if len(email) != 0 {
+		entityID = email
+	} else {
+		entityID = "defaultUser"
+	}
 	leftNavMenuFeature, _ := appConfiguration.GetFeature("left-navigation-menu")
-	return leftNavMenuFeature.IsEnabled()
+	return leftNavMenuFeature.GetCurrentValue(entityID) == true
 }
 
 // FlightButton function checks for the signed-in users, if flight booking button should be enabled
 func FlightButton(email string) bool {
-	entityID := "defaultUser"
+	var entityID string
+	if len(email) != 0 {
+		entityID = email
+	} else {
+		entityID = "defaultUser"
+	}
 	entityAttributes := make(map[string]interface{})
 	entityAttributes["email"] = email
 	flightBookingAllowedFeature, _ := appConfiguration.GetFeature("flight-booking")
