@@ -28,18 +28,14 @@ def initialize():
                                  environment_id=ENVIRONMENT_ID)
 
 # check_left_nav_menu_flag function checks for Left Navigation feature flag status
-
-
-def check_left_nav_menu_flag():
+def check_left_nav_menu_flag(email):
     left_nav_menu_feature = appconfig_client.get_feature(
         "left-navigation-menu")
-    return left_nav_menu_feature.is_enabled()
+    return left_nav_menu_feature.get_current_value(email)
 
 # flight_button function checks for the signed in users, if flight booking button should be enabled
-
-
 def flight_button(email):
-    entity_id = "defaultUser"
+    entity_id = email if (len(email) > 0) else "defaultUser"
     entity_attributes = dict()
     entity_attributes[EMAIL] = email
     flight_booking_allowed_feature = appconfig_client.get_feature(
@@ -49,8 +45,6 @@ def flight_button(email):
     return flight_booking_allowed == True
 
 # get_discount_value function gets the discount value from the App Configuration using the SDK
-
-
 def get_discount_value(user_email):
     discount_property = appconfig_client.get_property(
         "flight-booking-discount")

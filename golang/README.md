@@ -1,6 +1,6 @@
 # Golang Sample Application for IBM Cloud App Configuration service
 
-**DISCLAIMER**: This is a guideline sample application and is used for demonstrative and illustrative purposes only.
+> **DISCLAIMER**: This is a guideline sample application and is used for demonstrative and illustrative purposes only.
 This is not a production ready code.
 
 This sample contains a Golang microservice that you can use to learn more about the IBM Cloud App Configuration service.
@@ -13,10 +13,10 @@ This sample contains a Golang microservice that you can use to learn more about 
   - [Create an instance of App Configuration service](#create-an-instance-of-app-configuration-service)
   - [Setup the App Configuration service instance](#setup-the-app-configuration-service-instance)
   - [Run the sample](#run-the-sample)
-- [Explore the app and its use cases](#explore-the-app-and-its-use-cases)
-  - [Use case 1](#use-case-1)
-  - [Use case 2](#use-case-2)
-  - [Use case 3](#use-case-3)
+- [Explore the key use-cases included in the sample](#explore-the-key-use-cases-included-in-the-sample)
+  - [Use case 1: Canary release](#use-case-1-canary-release)
+  - [Use case 2: Dark launch in a phased manner](#use-case-2-dark-launch-in-a-phased-manner)
+  - [Use case 3: Properties](#use-case-3-properties)
 - [License](#license)
 
 ## Prerequisite
@@ -54,8 +54,8 @@ This sample contains a Golang microservice that you can use to learn more about 
   > If you face any permission errors during the script execution, provide appropriate permission to the file by running - `chmod +x ./demo.sh`. And then execute the script.
 - Provide all the inputs during script execution. A sample example is shown in below figure
   <img src="../common/README_IMAGES/README_IMG0.png" width=75% height=50%/>
-- Script execution takes time. Script is executed successfully only when you see the log `---Demo script complete---` at
-  the end in your terminal.
+- Script execution takes time. Script is executed successfully only when you see the log `---script run complete---` at
+  the end of your terminal.
 - This script will create the collections, feature flags, properties & segments using the default dev environment in the
   instance which are required for the sample(Bluecharge) web app.
 
@@ -64,7 +64,7 @@ This sample contains a Golang microservice that you can use to learn more about 
 - Prerequisites
     - Golang installed on your machine. Go version 1.16 or newer
 - Provide all the configuration values in [`.env`](.env) file
-- Run `go build` from the root folder to generate an executable binary for our sample Go application
+- Run `go build` from the root folder to generate an executable binary for the sample Go application
 - Run `./golang` to start the app
 - Access the running app in a browser at http://localhost:3000 (Can change the port in the .env file)
 
@@ -73,19 +73,25 @@ This sample contains a Golang microservice that you can use to learn more about 
 - [Using minikibe](../common/minikube)
 - [On IKS(IBM Kubernetes Service)](../common/kube)
 
-# Explore the app and its use cases
+# Explore the key use-cases included in the sample
 
 Keep the app running. Login with different email ids at a time.
 
-## Use case 1
+## Use case 1: Canary release
+
+Keep the default rollout percentage to 50% and turn on the toggle for `Left Navigation` feature flag. Login on the sample app with email id say, `jack@ibm.com` you would see the navigation links on the top get positioned to left side inside the hamburger menu. If you signout and login with email `james@ibm.com` you will see the old UI. This is because user `jack` falls under the 50% rollout and user `james` doesn't. Now increase the rollout percentage to 75% and both the users will be seeing the hamburger menu. This is how you can do a canary release by first rolling out the change to a small subset of users before gradually rolling it out to the entire infrastructure and making it available to everybody(100%).
 
 <img src="../common/README_IMAGES/README_IMG1.png"/>
 
-## Use case 2
+## Use case 2: Dark launch in a phased manner
+
+Keep the default rollout percentage to 0% and turn on the toggle for `Flight Booking` feature flag. Login with email id `alice@bluecharge.com` and you would see flight booking button displayed on the home screen banner. This is because for all the user emails ending with `@bluecharge.com` the feature flag is set to be enabled as per it's targeting rules. You then rollout this feature to a new group called `Business Users` by increasing the rollout percentage of this group from 0 to 50% in the Edit targeting screen. Which mean 50% of the user emails belonging to this group will also see the flight booking button. Next you can increase the default rollout percentage from 0 to 100% and make the flight booking button available to all users.
 
 <img src="../common/README_IMAGES/README_IMG2.png"/>
 
-## Use case 3
+## Use case 3: Properties
+
+Segmentation applied to properties.
 
 <img src="../common/README_IMAGES/README_IMG3.png"/>
 

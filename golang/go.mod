@@ -3,7 +3,7 @@ module golang
 go 1.17
 
 require (
-	github.com/IBM/appconfiguration-go-sdk v0.2.4
+	github.com/IBM/appconfiguration-go-sdk v0.3.0
 	github.com/joho/godotenv v1.3.0
 )
 
@@ -23,6 +23,7 @@ require (
 	github.com/oklog/ulid v1.3.1 // indirect
 	github.com/robfig/cron v1.2.0 // indirect
 	github.com/sirupsen/logrus v1.7.0 // indirect
+	github.com/spaolacci/murmur3 v1.1.0 // indirect
 	go.mongodb.org/mongo-driver v1.7.5 // indirect
 	golang.org/x/sys v0.0.0-20210616094352-59db8d763f22 // indirect
 	gopkg.in/go-playground/validator.v9 v9.31.0 // indirect
