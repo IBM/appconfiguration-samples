@@ -37,13 +37,15 @@ function featurecheck(req, res, next) {
     const leftNavMenuFeature = appConfigClient.getFeature('left-navigation-menu')
     // condition check is to access the feature object methods only when feature object is not null
     if (leftNavMenuFeature) {
-        leftNavMenu = leftNavMenuFeature.getCurrentValue(entityId);
+        const result = leftNavMenuFeature.getCurrentValue(entityId);
+        leftNavMenu = result['value'];
     }
 
     // fetch the property details of propertyId `flight-booking-discount` and get the getCurrentValue(entityId, entityAttributes) value of the property
     const discountProperty = appConfigClient.getProperty('flight-booking-discount')
     if (discountProperty) {
-        discountValue = discountProperty.getCurrentValue(entityId, entityAttributes)
+        const result = discountProperty.getCurrentValue(entityId, entityAttributes);
+        discountValue = result['value'];
     }
 
     next();
