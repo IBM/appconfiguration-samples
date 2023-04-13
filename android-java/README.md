@@ -56,7 +56,7 @@ Use either of the following options
         - Add below dependencies to module level `build.gradle` file
         ```java 
             dependencies {
-               implementation "com.ibm.cloud:appconfiguration-android-sdk:0.2.2"
+               implementation "com.ibm.cloud:appconfiguration-android-sdk:0.3.0"
             }
          ```
 

@@ -10,9 +10,6 @@ These samples are aimed at providing a way to quickly configure App Configuratio
 - [Android app (Java)](android-java)
 - [Android app (Kotlin)](android-kotlin)
 
-### Custom resource based on Razee
-- [Razee](razee)
-
 ## Additional Resources
 
 - [IBM Cloud App Configuration](https://cloud.ibm.com/catalog/services/app-configuration#about)
