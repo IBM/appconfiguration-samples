@@ -3,13 +3,13 @@ module golang
 go 1.17
 
 require (
-	github.com/IBM/appconfiguration-go-sdk v0.3.3
+	github.com/IBM/appconfiguration-go-sdk v0.4.0
 	github.com/joho/godotenv v1.5.1
 )
 
 require (
 	github.com/IBM/go-sdk-core/v5 v5.13.1 // indirect
-	github.com/IBM/secrets-manager-go-sdk v1.0.49 // indirect
+	github.com/IBM/secrets-manager-go-sdk/v2 v2.0.0 // indirect
 	github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2 // indirect
 	github.com/go-openapi/errors v0.20.3 // indirect
 	github.com/go-openapi/strfmt v0.21.7 // indirect
