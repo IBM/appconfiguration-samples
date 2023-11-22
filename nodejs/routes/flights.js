@@ -11,8 +11,8 @@
  * specific language governing permissions and limitations under the License.
  */
 
-const { appConfigClient } = require('../init');
 const express = require('express');
+const appconfig = require('../appconfig');
 
 const router = express.Router();
 let leftNavMenu;
@@ -28,26 +28,16 @@ function logincheck(req, res, next) {
 }
 
 function featurecheck(req, res, next) {
+    let result;
     const entityId = req.session.userEmail ? req.session.userEmail : 'defaultUser';
     const entityAttributes = {
         'email': req.session.userEmail
     }
 
-    // fetch the feature details of featureId `left-navigation-menu` and get the getCurrentValue(entityId) value of the feature
-    const leftNavMenuFeature = appConfigClient.getFeature('left-navigation-menu')
-    // condition check is to access the feature object methods only when feature object is not null
-    if (leftNavMenuFeature) {
-        const result = leftNavMenuFeature.getCurrentValue(entityId);
-        leftNavMenu = result['value'];
-    }
-
-    // fetch the property details of propertyId `flight-booking-discount` and get the getCurrentValue(entityId, entityAttributes) value of the property
-    const discountProperty = appConfigClient.getProperty('flight-booking-discount')
-    if (discountProperty) {
-        const result = discountProperty.getCurrentValue(entityId, entityAttributes);
-        discountValue = result['value'];
-    }
-
+    result = appconfig.getEvaluatedFeatureFlagValue('left-navigation-menu', entityId);
+    leftNavMenu = result['value'];
+    result = appconfig.getEvaluatedPropertyValue('flight-booking-discount', entityId, entityAttributes);
+    discountValue = result['value'];
     next();
 }
 
