@@ -22,7 +22,7 @@ region[2]="https://eu-gb.apprapp.cloud.ibm.com/apprapp/feature/v1/instances"
 region[3]="https://au-syd.apprapp.cloud.ibm.com/apprapp/feature/v1/instances"
 region[4]="https://us-east.apprapp.cloud.ibm.com/apprapp/feature/v1/instances"
 urlSeparator="/"
-import="import"
+config="config"
 queryParam="?clean=true"
 tokenURL="https://iam.cloud.ibm.com/identity/token"
 
@@ -43,15 +43,15 @@ while true; do
         * ) echo "Please answer yes(y) or no(N)";;
     esac
 done
-printf "\nrunning the script ..."
+printf "\nrunning the script ...\n"
 baseURL=${region[${regionIn}]}
-importURL="$baseURL$urlSeparator$guid$urlSeparator$import$queryParam"
+importConfigURL="$baseURL$urlSeparator$guid$urlSeparator$config$queryParam"
 tokenResponse=$(curl -s -X POST $tokenURL -H "Content-Type: application/x-www-form-urlencoded" -d 'grant_type=urn:ibm:params:oauth:grant-type:apikey&apikey='"$apikey"'')
 access_token=($((echo $tokenResponse | jq -r '.access_token') | tr -d \'\"))
 
 importConfigurations() 
 {
-	importStatus=$(curl -s --write-out 'HTTPSTATUS:%{http_code}'  -X POST $importURL -H "Authorization: Bearer $access_token" -H "Content-Type: application/json" --data @./configurations-android.json $importURL )
+	importStatus=$(curl -s --write-out 'HTTPSTATUS:%{http_code}'  -X POST $importConfigURL -H "Authorization: Bearer $access_token" -H "Content-Type: application/json" --data @./configurations-android.json )
 	HTTP_BODY=$(echo $importStatus | sed -e 's/HTTPSTATUS\:.*//g' | jq .)
 	HTTP_STATUS=$(echo $importStatus | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
 	printf "%b\nHTTP_STATUS is $HTTP_STATUS"

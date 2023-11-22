@@ -10,17 +10,27 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
+
 require('dotenv').config();
-require('./init').initialiseAppConfiguration();
+
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
+const appconfig = require('./appconfig');
 const indexRouter = require('./routes/index');
 const flightBookingRouter = require('./routes/flights');
 
 const app = express();
+(async () => {
+    try {
+        await appconfig.initialiseAppConfig();
+        console.log("app configuration sdk init successful");
+    } catch (e) {
+        console.error("failed to initialise app configuration sdk", e);
+    }
+})()
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -37,18 +47,18 @@ app.use('/flightbooking', flightBookingRouter)
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
-  next(createError(404));
+    next(createError(404));
 });
 
 // error handler
 app.use((err, req, res, next) => {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+    // set locals, only providing error in development
+    res.locals.message = err.message;
+    res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
+    // render the error page
+    res.status(err.status || 500);
+    res.render('error');
 
 });
 

@@ -11,75 +11,65 @@
  * specific language governing permissions and limitations under the License.
  */
 
-const { appConfigClient } = require('../init');
 const express = require('express');
+const appconfig = require('../appconfig');
 
 const router = express.Router();
 let leftNavMenu;
 let flightBookingAllowed;
 
 function logincheck(req, res, next) {
-  if (req.session && req.session.userEmail) {
-    req.isLoggedInUser = true
-  } else {
-    req.isLoggedInUser = false
-  }
-  next();
+    if (req.session && req.session.userEmail) {
+        req.isLoggedInUser = true
+    } else {
+        req.isLoggedInUser = false
+    }
+    next();
 }
 
 function featurecheck(req, res, next) {
-  const entityId = req.session.userEmail ? req.session.userEmail : 'defaultUser';
-  const entityAttributes = {
-    'email': req.session.userEmail
-  }
+    let result;
+    const entityId = req.session.userEmail ? req.session.userEmail : 'defaultUser';
+    const entityAttributes = {
+        'email': req.session.userEmail
+    }
 
-  // fetch the feature details of featureId `left-navigation-menu` and get the getCurrentValue(entityId) value of the feature
-  const leftNavMenuFeature = appConfigClient.getFeature('left-navigation-menu')
-  // condition check is to access the feature object methods only when feature object is not null
-  if (leftNavMenuFeature) {
-    const result = leftNavMenuFeature.getCurrentValue(entityId);
+    result = appconfig.getEvaluatedFeatureFlagValue('left-navigation-menu', entityId);
     leftNavMenu = result['value'];
-  }
-
-  // fetch the feature details of featureId `flight-booking` and get the getCurrentValue(entityId, entityAttributes) value of the feature
-  const flightBookingAllowedFeature = appConfigClient.getFeature('flight-booking')
-  if (flightBookingAllowedFeature) {
-    const result = flightBookingAllowedFeature.getCurrentValue(entityId, entityAttributes);
+    result = appconfig.getEvaluatedFeatureFlagValue('flight-booking', entityId, entityAttributes);
     flightBookingAllowed = result['value'];
-  }
-
-  next();
+    next();
 }
 
 const loginAndFeatureCheck = [logincheck, featurecheck]
 
 /* GET home page. */
 router.get('/', loginAndFeatureCheck, (req, res, next) => {
-  res.render('index', { isLoggedInUser: req.isLoggedInUser, userEmail: req.session.userEmail, leftNavMenu, flightBookingAllowed });
+    res.render('index', { isLoggedInUser: req.isLoggedInUser, userEmail: req.session.userEmail, leftNavMenu, flightBookingAllowed });
 });
 
 /* Login code */
 router.post('/', (req, res, next) => {
-  if (req.body.logemail && req.body.logpassword) {
-    req.session.userEmail = req.body.logemail;
-    return res.redirect('/');
-  } else {
-    var err = new Error('All fields required.');
-    err.status = 400;
-    return next(err);
-  }
+    if (req.body.logemail && req.body.logpassword) {
+        req.session.userEmail = req.body.logemail;
+        return res.redirect('/');
+    } else {
+        var err = new Error('All fields required.');
+        err.status = 400;
+        return next(err);
+    }
 })
 
 /* Logout code */
 router.get('/logout', (req, res, next) => {
-  if (req.session) {
-    req.session.destroy((err) => {
-      if (err) {
-        return next(err);
-      }
-      return res.redirect('/');
-    });
-  }
+    if (req.session) {
+        req.session.destroy((err) => {
+            if (err) {
+                return next(err);
+            }
+            return res.redirect('/');
+        });
+    }
 });
 
 module.exports = router;
