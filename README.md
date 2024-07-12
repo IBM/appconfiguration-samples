@@ -9,6 +9,7 @@ These samples are aimed at providing a way to quickly configure App Configuratio
 - [Python microservice](python)
 - [Android app (Java)](android-java)
 - [Android app (Kotlin)](android-kotlin)
+- [React app](reactjs)
 
 ## Additional Resources
 
