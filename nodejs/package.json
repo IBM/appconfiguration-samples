@@ -14,6 +14,6 @@
         "express": "^4.19.2",
         "express-session": "^1.18.0",
         "http-errors": "~1.6.3",
-        "ibm-appconfiguration-node-sdk": "^0.7.5"
+        "ibm-appconfiguration-node-sdk": "^0.7.6"
     }
 }

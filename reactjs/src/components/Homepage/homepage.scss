@@ -1,0 +1,93 @@
+.banner-hp {
+    background: url(../../images/homebanner.jpg) no-repeat 0px 0px;
+    background-size: cover;
+    min-height: 570px;
+    position: relative;
+}
+
+.banner-info-hp h3 {
+    font-family: "IBM Plex Sans", sans-serif;
+    color: #fff;
+    font-size: 42px;
+    text-align: center;
+    line-height: 1.4em;
+    text-transform: uppercase;
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+
+.buttons-hp {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+}
+
+.buttons-hp:before {
+    content: ' ';
+    display: block;
+    height: 55%;
+}
+
+.buttons-hp button {
+    margin-right: 30px;
+}
+
+.flight-button-hp {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+}
+
+.flight-button-hp:before {
+    content: ' ';
+    display: block;
+    height: 70%;
+}
+
+.flight-button-hp button {
+    margin-right: 50px;
+}
+
+.btm-grid-hp h3 {
+    color: #3d70b2;
+    font-size: 32px;
+    text-transform: uppercase;
+    font-family: "IBM Plex Sans", sans-serif;
+    text-align: center;
+}
+
+.btm-grid-hp p {
+    color: #5d5c5c;
+    font-size: 16px;
+    text-align: center;
+    margin-top: 10px;
+    line-height: 1.5em;
+}
+
+.btm-grid-hp img {
+    width: 100%;
+    margin-top: 8px;
+}
+
+.back-col1-hp {
+    background: #f0cc68;
+    padding: 4em 11.7em;
+}
+
+.back-col2-hp {
+    background: #3d70b2;
+    padding: 4em 11.7em;
+}
+
+.btm-wid-hp {
+    margin-top: 50px;
+}
