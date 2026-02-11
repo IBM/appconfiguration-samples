@@ -50,7 +50,7 @@ This sample contains an Node.js microservice that you can use to learn more abou
 
 ## Run the sample
 - Prerequisites
-    - Node.js version 14 or newer.
+    - Node.js version 14 to 24.
 - Provide all the configuration values in [`.env`](.env) file
 - Installing Dependencies
     - Run `npm install` from the root folder(appconfiguration-samples/nodejs) to install the app’s dependencies.
